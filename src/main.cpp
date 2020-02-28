@@ -1,80 +1,51 @@
-/**
- * File              : main.cpp
- * Author            : Wayne Yeo [fishnsotong] <wwzyeo@gmail.com>
- * Date              : 2020-02-24T16:11:18+0800
- * Last Modified Date: 2020-02-25T14:05:58+0800
- * Last Modified By  : Wayne Yeo [fishnsotong] <wwzyeo@gmail.com>
- */
+/* Sweep
+ by BARRAGAN <http://barraganstudio.com>
+ This example code is in the public domain.
 
-#include <Arduino.h>
+ modified 8 Nov 2013
+ by Scott Fitzgerald
+ http://www.arduino.cc/en/Tutorial/Sweep
+*/
+
+#include <Arduino.h>  
 #include <Servo.h>
-#include <Wire.h>
+#include "Button.h"
 
-const int controls[] = {5, 6, 9, 10};   // these need PWM
-const int motors[] = {2, 4, 7, 8};      // these don't
+Servo servoAir;  // create servo object to control a servo
+Servo servoPbs;
+// twelve servo objects can be created on most boards
+Button buttonAir(7);
+Button buttonPbs(8);
 
-class Button {
-  private:
-    byte pin;
-    byte state;
-    byte lastReading;
-    unsigned long lastDebounceTime = 0;
-    unsigned long debounceDelay = 50;
-
-  public:
-    Button(byte pin) {
-      this -> pin = pin;
-      lastReading = LOW;
-      init();
-    }
-
-    void init() {
-      pinMode(pin, INPUT);
-      update();
-    }
-
-    void update() {
-      byte newReading = digitalRead(pin);
-
-      if (newReading != lastReading) {
-        lastDebounceTime = millis();
-      }
-
-      if (millis() - lastDebounceTime > debounceDelay) {
-        state = newReading;
-      }
-
-      lastReading = newReading;
-    }
-
-    byte getState() {
-      update();
-      return state;
-    }
-
-    bool isPressed() {
-      return (getState() == HIGH);
-    }
-
-};
+int posAir = 0;    // variable to store the servo position
+int posPbs = 0;
 
 void setup() {
-  Button button1(4);
-  for (int a = 0; a < 4; a++) {
-    Button controls[a](a);
-  }
-
-  for (int a = 0; a < 4; a++) {
-    pinMode(motors[a], OUTPUT); // TODO: You don't need to assign pinMode for the Servo class.
-    Servo motors[a];
-    motors[a].attach(a);
-  }
-  pinMode(13, OUTPUT);
+  servoAir.attach(9);  // attaches the servo on pin 9 to the servo object
+  servoPbs.attach(10);
 }
 
 void loop() {
-  pinMode(13, HIGH);
-  delay(100);
-  pinMode(13, LOW);
-  delay(100);
+
+  if (buttonAir.isPressed() == 1) {
+    if (posAir == 0) {
+      posAir = 90;
+      servoAir.write(posAir);
+    } else if (posAir == 90) {
+      posAir = 0;
+      servoAir.write(posAir);
+    }
+  }
+
+  if (buttonPbs.isPressed() == 1) {
+    if (posPbs == 0) {
+      posPbs = 90;
+      servoPbs.write(posPbs);
+    } else if (posPbs == 90) {
+      posPbs = 0;
+      servoAir.write(posPbs);
+    }
+  }
+ 
 }
+
