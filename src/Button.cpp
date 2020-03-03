@@ -7,7 +7,7 @@ Button::Button(int pin) {
 }
 
 void Button::init() {
-    pinMode(pin, INPUT);
+    pinMode(pin, INPUT_PULLUP);
     update();
 }
 

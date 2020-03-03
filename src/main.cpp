@@ -1,51 +1,65 @@
-/* Sweep
- by BARRAGAN <http://barraganstudio.com>
- This example code is in the public domain.
-
- modified 8 Nov 2013
- by Scott Fitzgerald
- http://www.arduino.cc/en/Tutorial/Sweep
-*/
-
 #include <Arduino.h>  
 #include <Servo.h>
 #include "Button.h"
 
-Servo servoAir;  // create servo object to control a servo
-Servo servoPbs;
-// twelve servo objects can be created on most boards
-Button buttonAir(7);
-Button buttonPbs(8);
+Servo servoPbsAir;
+Servo servoPbsToggle;
+Servo ImidAir;
+Servo servoImidToggle;
 
-int posAir = 0;    // variable to store the servo position
-int posPbs = 0;
+int controls[] = {7, 6, 5};
+
+int posPbsAir = 0;    // immediately sucks Pbs up when turned on
+int posPbsToggle = 135;
+
+int testLight = 13;
 
 void setup() {
-  servoAir.attach(9);  // attaches the servo on pin 9 to the servo object
-  servoPbs.attach(10);
+
+  for (int a = 0; a < 3; a++) {
+    pinMode(controls[a], INPUT);
+  }
+
+  servoPbsAir.attach(9);  // attaches the servo on pin 9 to the servo object
+  servoPbsToggle.attach(10);
+
+  pinMode(testLight, OUTPUT);
+  digitalWrite(testLight, LOW);
 }
 
 void loop() {
 
-  if (buttonAir.isPressed() == 1) {
-    if (posAir == 0) {
-      posAir = 90;
-      servoAir.write(posAir);
-    } else if (posAir == 90) {
-      posAir = 0;
-      servoAir.write(posAir);
-    }
-  }
+  if (digitalRead(controls[0]) == HIGH) {
+    digitalWrite(testLight, HIGH);
 
-  if (buttonPbs.isPressed() == 1) {
-    if (posPbs == 0) {
-      posPbs = 90;
-      servoPbs.write(posPbs);
-    } else if (posPbs == 90) {
-      posPbs = 0;
-      servoAir.write(posPbs);
+    // creating negative pressure in the well
+    for (posPbsAir = 0; posPbsAir <= 90; posPbsAir += 1) {
+      servoPbsAir.write(posPbsAir);
+      delay(15);
     }
+    for (posPbsToggle = 135; posPbsToggle >= 90; posPbsToggle -= 1) {
+      servoPbsToggle.write(posPbsToggle);
+      delay(15);
+    }
+    // yes, it takes that long to dispense through the column
+    delay(15000);
+
+    for (posPbsToggle = 90; posPbsToggle <= 135; posPbsToggle += 1) {
+      servoPbsToggle.write(posPbsToggle);
+      delay(15);
+    }
+    for (posPbsAir = 90; posPbsAir >= 0; posPbsAir -= 1) {
+      servoPbsAir.write(posPbsAir);
+      delay(15);
+    }
+    digitalWrite(testLight, LOW);
+
+  } else if (digitalRead(controls[1]) == HIGH) {
+    // ...code
+
+  } else if (digitalRead(controls[2]) == HIGH) {
+    // ...code
+    
   }
- 
 }
 

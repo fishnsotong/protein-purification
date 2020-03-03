@@ -9,7 +9,6 @@
             "includePath": [
                 "/Users/fishnsotong/GitHub/merl/protein-purification/include",
                 "/Users/fishnsotong/GitHub/merl/protein-purification/src",
-                "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 "/Users/fishnsotong/GitHub/merl/protein-purification/.pio/libdeps/uno/Servo_ID883/src",
                 "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/variants/standard",
@@ -17,6 +16,7 @@
                 "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/libraries/HID/src",
                 "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                 "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 "/Users/fishnsotong/.platformio/packages/tool-unity",
                 ""
             ],
@@ -25,7 +25,6 @@
                 "path": [
                     "/Users/fishnsotong/GitHub/merl/protein-purification/include",
                     "/Users/fishnsotong/GitHub/merl/protein-purification/src",
-                    "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     "/Users/fishnsotong/GitHub/merl/protein-purification/.pio/libdeps/uno/Servo_ID883/src",
                     "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/variants/standard",
@@ -33,6 +32,7 @@
                     "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/libraries/HID/src",
                     "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                     "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                    "/Users/fishnsotong/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     "/Users/fishnsotong/.platformio/packages/tool-unity",
                     ""
                 ]
