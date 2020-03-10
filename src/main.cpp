@@ -169,3 +169,4 @@ void loop() {
  *
  * 3. power supply: 12v and 5v from plug is unreliable, only laptops work.
  *    why? can try 9v from wall? or power banks.
+ */
