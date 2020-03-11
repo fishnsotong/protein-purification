@@ -2,9 +2,10 @@
  * File              : main.cpp
  * Author            : Wayne Yeo [fishnsotong] <wwzyeo@gmail.com>
  * Date              : 2020-02-24T15:12:24+0800
- * Last Modified Date: 2020-03-03T19:26:29+0800
+ * Last Modified Date: 2020-03-11T18:02:46+0800
  * Last Modified By  : Wayne Yeo [fishnsotong] <wwzyeo@gmail.com>
  */
+
 #include <Arduino.h>  
 #include <Servo.h>
 #include "Button.h"
@@ -16,12 +17,38 @@ Servo servoImidToggle;
 
 int controls[] = {7, 6, 5};
 
-int posPbsAir = 0;    // immediately sucks Pbs up when turned on
-int posPbsToggle = 135;
-int posImidAir = 90; //immediately sucks Imid up when turned on
-int posImidToggle = 90; // open to low conc Imid + Pbs when turned on
+int posPbsAir = 0;
+int posPbsToggle = 90; // default CLOSED
+int posImidAir = 90;
+int posImidToggle = 45; // default CLOSED
 
 int testLight = 13;
+
+void resetSystem();
+void blink();
+
+void pbsDispense();
+void pbsCollect();
+
+void imidDispense();
+void imidCollect();
+
+// main outlet of the device
+// open before each action and close after dispensing PBS
+// 90-135 deg
+void mainToggleOpen_PBS();
+void mainToggleClose_PBS();
+
+// open before each action and close after dispending Imid
+// 0-135 deg
+void mainToggleOpen_IMID();
+void mainToggleClose_IMID();
+
+// toggle to switch between PBS and imidazole action
+void imidToggleOpen_HIGH();
+void imidToggleOpen_LOW();
+void imidToggleClose_HIGH();
+void imidToggleClose_LOW();
 
 void setup() {
 
@@ -29,7 +56,7 @@ void setup() {
     pinMode(controls[a], INPUT);
   }
 
-  servoPbsAir.attach(9);  // attaches the servo on pin 9 to the servo object
+  servoPbsAir.attach(9);
   servoPbsToggle.attach(10);
   servoImidAir.attach(11);
   servoImidToggle.attach(3);
@@ -37,136 +64,177 @@ void setup() {
   pinMode(testLight, OUTPUT);
   digitalWrite(testLight, LOW);
 
-  servoPbsAir.write(posPbsAir);
+  servoPbsToggle.write(posPbsToggle);
+  servoImidToggle.write(posImidToggle);
+  resetSystem();
 }
 
 void loop() {
 
   if (digitalRead(controls[0]) == HIGH) {
+    
     digitalWrite(testLight, HIGH);
+    pbsDispense();
+    mainToggleOpen_PBS();
 
-    // creating negative pressure in the well
-    for (posPbsAir = 0; posPbsAir <= 90; posPbsAir += 1) {
-      servoPbsAir.write(posPbsAir);
-      delay(15);
-    }
-    for (posPbsToggle = 135; posPbsToggle >= 90; posPbsToggle -= 1) {
-      servoPbsToggle.write(posPbsToggle);
-      delay(15);
-    }
-    // yes, it takes that long to dispense through the column
     delay(15000);
 
-    for (posPbsToggle = 90; posPbsToggle <= 135; posPbsToggle += 1) {
-      servoPbsToggle.write(posPbsToggle);
-      delay(15);
-    }
-    for (posPbsAir = 90; posPbsAir >= 0; posPbsAir -= 1) {
-      servoPbsAir.write(posPbsAir);
-      delay(15);
-    }
+    mainToggleClose_PBS();
+    pbsCollect();
     digitalWrite(testLight, LOW);
 
   } else if (digitalRead(controls[1]) == HIGH) {
+
     digitalWrite(testLight, HIGH);
+    imidToggleClose_LOW();
+    mainToggleOpen_IMID();
+    imidDispense();
 
-    for (posImidToggle = 90; posImidToggle <= 135; posImidToggle += 1) {
-      servoImidToggle.write(posImidToggle);
-      delay(15);
-    } // close the Imid valve
-
-      for (posPbsToggle = 135; posPbsToggle >= 0; posPbsToggle -= 1) {
-      servoPbsToggle.write(posPbsToggle);
-      delay(15);
-    } // open outlet
-
-    for (posImidAir = 90; posImidAir >= 0; posImidAir -= 1) {
-      servoImidAir.write(posImidAir);
-      delay(15);
-    } // dispense Imid.
-    // yes, it takes that long to dispense through the column
     delay(15000);
 
-    for (posPbsToggle = 0; posPbsToggle <= 135; posPbsToggle += 1) {
-      servoPbsToggle.write(posPbsToggle);
-      delay(15);
-    } // close outlet
-
+    mainToggleClose_IMID();
     digitalWrite(testLight, LOW);
 
   } else if (digitalRead(controls[2]) == HIGH) {
+
     digitalWrite(testLight, HIGH);
+    imidToggleOpen_HIGH();
+    imidCollect();
 
-    for (posImidToggle = 135; posImidToggle <= 180; posImidToggle += 1) {
-      servoImidToggle.write(posImidToggle);
-      delay(15);
-    } // open the Imid valve to high conc.
+    delay(5000);
 
-    for (posImidAir = 0; posImidAir <= 90; posImidAir += 1) {
-      servoImidAir.write(posImidAir);
-      delay(15);
-    } // suck high conc Imid.
+    imidToggleClose_HIGH();
+    mainToggleOpen_IMID();
+    imidDispense();
 
-    delay(7500);
-
-    for (posImidToggle = 180; posImidToggle >= 135; posImidToggle -= 1) {
-      servoImidToggle.write(posImidToggle);
-      delay(15);
-    } // close the Imid valve
-
-    for (posPbsToggle = 135; posPbsToggle >= 0; posPbsToggle -= 1) {
-      servoPbsToggle.write(posPbsToggle);
-      delay(15);
-    } // open outlet
-
-    for (posImidAir = 90; posImidAir >= 0; posImidAir -= 1) {
-      servoImidAir.write(posImidAir);
-      delay(15);
-    } // dispense high conc Imid
     delay(15000);
 
-    for (posPbsToggle = 0; posPbsToggle <= 90; posPbsToggle += 1) {
-      servoPbsToggle.write(posPbsToggle);
-      delay(15);
-    } // open outlet to Pbs
+    mainToggleClose_IMID();
+    mainToggleOpen_PBS();
+    pbsDispense();
 
-    for (posPbsAir = 0; posPbsAir <= 90; posPbsAir += 1) {
-      servoPbsAir.write(posPbsAir);
-      delay(15); //dispense Pbs
-    }
-    
-    // yes, it takes that long to dispense through the column
     delay(15000);
 
-    for (posPbsToggle = 90; posPbsToggle <= 135; posPbsToggle += 1) {
-      servoPbsToggle.write(posPbsToggle);
-      delay(15);
-    }
-    for (posPbsAir = 90; posPbsAir >= 0; posPbsAir -= 1) {
-      servoPbsAir.write(posPbsAir);
-      delay(15); // reset PBS
-    }
+    mainToggleClose_PBS();
+    pbsCollect();
 
-    for (posImidToggle = 45; posImidToggle <= 90; posImidToggle += 1) {
-      servoImidToggle.write(posImidToggle);
-      delay(15);
-    }
+    delay(5000);
 
-    for (posPbsAir = 0; posPbsAir <= 90; posPbsAir += 1) {
-      servoPbsAir.write(posPbsAir);
-      delay(15); // suck low con imid
-    }
+    imidToggleOpen_LOW();
+    imidCollect();
+
+    delay(5000);
 
     digitalWrite(testLight, LOW);
 
   }
 }
+
+void resetSystem() {
+  mainToggleClose_PBS();
+  pbsCollect();
+  delay(5000);
+  imidToggleOpen_LOW();
+  imidCollect();
+  delay(5000);
+
+  blink();
+  blink();
+  blink();
+}
+
+void blink() {
+  digitalWrite(testLight, HIGH);
+  delay(200);
+  digitalWrite(testLight, LOW);
+  delay(200);
+}
+
+void pbsDispense() {
+  for (posPbsAir = 0; posPbsAir <= 90; posPbsAir += 1) {
+      servoPbsAir.write(posPbsAir);
+      delay(15);
+    }
+}
+
+void pbsCollect() {
+  for (posPbsAir = 90; posPbsAir >= 0; posPbsAir -= 1) {
+      servoPbsAir.write(posPbsAir);
+      delay(15);
+    }
+}
+
+void imidDispense() {
+  for (posImidAir = 90; posImidAir >= 0; posImidAir -= 1) {
+      servoImidAir.write(posImidAir);
+      delay(15);
+    }
+}
+
+void imidCollect() {
+  for (posImidAir = 0; posImidAir <= 90; posImidAir += 1) {
+      servoImidAir.write(posImidAir);
+      delay(15);
+    }
+}
+
+void mainToggleOpen_PBS() {
+  for (posPbsToggle = 135; posPbsToggle >= 90; posPbsToggle -= 1) {
+      servoPbsToggle.write(posPbsToggle);
+      delay(15);
+  }
+}
+
+void mainToggleClose_PBS() {
+  for (posPbsToggle = 90; posPbsToggle <= 135; posPbsToggle += 1) {
+      servoPbsToggle.write(posPbsToggle);
+      delay(15);
+    }
+}
+
+void mainToggleOpen_IMID() {
+  for (posPbsToggle = 135; posPbsToggle >= 0; posPbsToggle -= 1) {
+      servoPbsToggle.write(posPbsToggle);
+      delay(15);
+    }
+}
+
+void mainToggleClose_IMID() {
+  for (posPbsToggle = 0; posPbsToggle <= 135; posPbsToggle += 1) {
+      servoPbsToggle.write(posPbsToggle);
+      delay(15);
+    }
+}
+
+void imidToggleOpen_LOW() {
+  for (posImidToggle = 45; posImidToggle <= 90; posImidToggle += 1) {
+    servoImidToggle.write(posImidToggle);
+    delay(15);
+  }
+}
+
+void imidToggleClose_LOW() {
+  for (posImidToggle = 90; posImidToggle >= 45; posImidToggle -= 1) {
+    servoImidToggle.write(posImidToggle);
+    delay(15);
+  }
+}
+
+void imidToggleOpen_HIGH() {
+  for (posImidToggle = 45; posImidToggle <= 180; posImidToggle += 1) {
+      servoImidToggle.write(posImidToggle);
+      delay(15);
+    }
+}
+
+void imidToggleClose_HIGH() {
+  for (posImidToggle = 180; posImidToggle >= 45; posImidToggle -= 1) {
+      servoImidToggle.write(posImidToggle);
+      delay(15);
+    }
+}
+
 /* TODO:
- * 1. elution (imidazole + PBS) presented backflow at 45 deg, try 135 deg?
- *
- * 2. reset of system somehow not automatic, and cannot happan at the same
- *    time. I suggest staggering it in void setup()
- *
- * 3. power supply: 12v and 5v from plug is unreliable, only laptops work.
- *    why? can try 9v from wall? or power banks.
+ * 1. For some reason, the reset button does not function correctly.
+ *    Control 3 seems to work fine as a reset function, however.
  */
