@@ -18,20 +18,23 @@ _to be added_
 
 ## directory structure
 
-stable - current working version of 'src' - src code is experimental
-include - project header files 
-lib - project specific (private) libraries 
-src - project source files 
-platformio.ini - project configuration file
+- stable - current working version of 'src' - src code is experimental
+- include - project header files 
+- lib - project specific (private) libraries 
+- src - project source files 
+- platformio.ini - project configuration file
 
 ## build instructions
 Download the latest version of [PlatformIO][platformio] or the Arduino IDE
 
-`pio run` - process/build project from the current directory 
-`pio run --target upload` or
-`pio run -t upload` - upload firmware to a target 
-`pio run --target clean` - clean project (remove compiled files) 
-`pio run --help` - additional information
+- `pio run` - process/build project from the current directory 
+- `pio run --target upload` or
+- `pio run -t upload` - upload firmware to a target 
+- `pio run --target clean` - clean project (remove compiled files) 
+- `pio run --help` - additional information
+
+## contributors
+This project was developed with Wei Yifeng at MERL, A\*STAR.
 
 [info]: https://www.labome.com/method/Protein-Purification.html
 [platformio]: https://platformio.org/
