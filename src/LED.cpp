@@ -1,3 +1,11 @@
+/**
+ * File              : LED.cpp
+ * Author            : Wayne Yeo [fishnsotong@gosigs] <wwzyeo@gmail.com>
+ * Date              : 2020-03-25T17:06:43+0800
+ * Last Modified Date: 2020-03-31T22:13:11+0800
+ * Last Modified By  : Wayne Yeo [fishnsotong@gosigs] <wwzyeo@gmail.com>
+ */
+
 #include "LED.h"
 
 LED::LED(int pin) {
