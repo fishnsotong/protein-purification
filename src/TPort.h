@@ -14,20 +14,25 @@
 
 class TPort {
   private:
-    byte pin;
+    int pin;
     int position;
     int openPos1;
     int openPos2;
     int closePos;
+    Servo servo;
 
   public:
-    Valve(byte pin, int openPos1, int openPos2, int closePos);
+    TPort(int pin, int openPos1, int openPos2, int closePos);
     void init();
-    void update();
+    void detach();
 
     void open1();
     void open2();
-    void close();
+    void close1();
+    void close2();
+
+    // is it possible to fetch the name of the previous function run,
+    // and fit it into a conditional statement?
 
 };
 

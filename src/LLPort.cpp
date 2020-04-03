@@ -16,12 +16,11 @@ LLPort::LLPort(int pin, int dispensePos, int collectPos) {
 void LLPort::init() {
   // LLPort starts assuming well is empty
   pos = collectPos;
-  Servo servo;
   servo.attach(pin);
 }
 
 void LLPort::detach() {
-  servo.detach(pin);
+  servo.detach();
 }
 
 void LLPort::dispense() {
