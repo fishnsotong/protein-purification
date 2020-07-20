@@ -2,7 +2,7 @@
  * File              : TPort.h
  * Author            : Wayne Yeo [fishnsotong@gosigs] <wwzyeo@gmail.com>
  * Date              : 2020-03-31T20:45:09+0800
- * Last Modified Date: 2020-03-31T21:57:51+0800
+ * Last Modified Date: 2020-04-23T07:53:44+0800
  * Last Modified By  : Wayne Yeo [fishnsotong@gosigs] <wwzyeo@gmail.com>
  */
 
@@ -26,10 +26,10 @@ class TPort {
     void init();
     void detach();
 
-    void open1();
-    void open2();
-    void close1();
-    void close2();
+    void open_mode1();
+    void open_mode2();
+    void close_mode1();
+    void close2_mode2();
 
     // is it possible to fetch the name of the previous function run,
     // and fit it into a conditional statement?

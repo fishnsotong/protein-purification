@@ -2,8 +2,8 @@
  * File              : main.cpp
  * Author            : Wayne Yeo [fishnsotong] <wwzyeo@gmail.com>
  * Date              : 2020-02-24T15:12:24+0800
- * Last Modified Date: 2020-03-11T18:02:46+0800
- * Last Modified By  : Wayne Yeo [fishnsotong] <wwzyeo@gmail.com>
+ * Last Modified Date: 2020-04-21T22:42:59+0800
+ * Last Modified By  : Wayne Yeo [fishnsotong@gosigs] <wwzyeo@gmail.com>
  */
 
 #include <Arduino.h>  
@@ -36,8 +36,8 @@ void imidCollect();
 // main outlet of the device
 // open before each action and close after dispensing PBS
 // 90-135 deg
-void mainToggleOpen_PBS();
-void mainToggleClose_PBS();
+void mainToggleOpen_PBS();    // TPort
+void mainToggleClose_PBS();   // TPort
 
 // open before each action and close after dispending Imid
 // 0-135 deg
